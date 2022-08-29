@@ -2,8 +2,7 @@
     "elasticsearch": {
         "username": "rd-user",
         "password": "YKwJQi9HPqmamMmdyW8U",
-        "url": "https://172.17.64.1:19200",
-        "index": "",
+        "url": "https://localhost:19200",
         "indexStartDate": "2022-07-29",
         "indexEndDate": "2022-07-31",
         "k8sNamespace": "infra-external",
