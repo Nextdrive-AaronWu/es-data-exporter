@@ -72,7 +72,7 @@ async function getDataFromEs({ index, type = TYPE, from }) {
             log: item.fields.log[0].replace(/(\r\n|\n|\r)/gm, "")
         };
     });
-    return { totalCount, data };
+    return { totalCount: data.length, data };
 }
 
 async function writeCsvPromise({ index, data, append = false }) {
@@ -95,26 +95,22 @@ async function main() {
     for (const index of indexes) {
         const csvWriterPromises = [];
         let from = 0;
-    
-        const { totalCount, data } = await getDataFromEs({ index, from });
-        console.log(`index: ${index}, totalCount: ${totalCount}, process start`); // totalCount will be 10000 event if total is great than 10000.
-    
-        csvWriterPromises.push(writeCsvPromise({ index, data }));
-    
-        from +=ELASTICSEARCH_PAGE_SIZE;
-        let isTotalCountMax = (totalCount === ELASTICSEARCH_PAGE_SIZE);
-        while (isTotalCountMax) {
+
+        while (true) {
             console.log("from:", from);
-    
-            const { totalCount: totalCountThisPage, data: dataThisPage } = await getDataFromEs({ index, from });
+
+            const { totalCount, data } = await getDataFromEs({ index, from });
+
+            console.log(`index: ${index}, totalCount: ${totalCount}, process start`);
     
             csvWriterPromises.push(writeCsvPromise({ index, data: dataThisPage, append: true }));
     
-            from +=ELASTICSEARCH_PAGE_SIZE;
-            isTotalCountMax = (totalCountThisPage === ELASTICSEARCH_PAGE_SIZE);
+            from += ELASTICSEARCH_PAGE_SIZE;
+
+            if (totalCount < ELASTICSEARCH_PAGE_SIZE) break;
         }
         Promise.all(csvWriterPromises);
-        console.log(`index: ${index}, totalCount: ${totalCount}, process finish`);
+        // console.log(`index: ${index}, totalCount: ${totalCount}, process finish`);
     }
 }
 main();
