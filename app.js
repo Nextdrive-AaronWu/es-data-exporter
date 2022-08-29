@@ -97,19 +97,21 @@ async function main() {
         let from = 0;
     
         const { totalCount, data } = await getDataFromEs({ index, from });
-        console.log(`index: ${index}, totalCount: ${totalCount}, process start`);
+        console.log(`index: ${index}, totalCount: ${totalCount}, process start`); // totalCount will be 10000 event if total is great than 10000.
     
         csvWriterPromises.push(writeCsvPromise({ index, data }));
     
         from +=ELASTICSEARCH_PAGE_SIZE;
-        while (from < totalCount) {
-            // console.log("from:", from);
+        let isTotalCountMax = (totalCount === ELASTICSEARCH_PAGE_SIZE);
+        while (isTotalCountMax) {
+            console.log("from:", from);
     
-            const { data } = await getDataFromEs({ index, from });
+            const { totalCount: totalCountThisPage, data: dataThisPage } = await getDataFromEs({ index, from });
     
-            csvWriterPromises.push(writeCsvPromise({ index, data, append: true }));
+            csvWriterPromises.push(writeCsvPromise({ index, data: dataThisPage, append: true }));
     
             from +=ELASTICSEARCH_PAGE_SIZE;
+            isTotalCountMax = (totalCountThisPage === ELASTICSEARCH_PAGE_SIZE);
         }
         Promise.all(csvWriterPromises);
         console.log(`index: ${index}, totalCount: ${totalCount}, process finish`);
