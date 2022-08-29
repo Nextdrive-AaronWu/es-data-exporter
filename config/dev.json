@@ -1,0 +1,12 @@
+{
+    "elasticsearch": {
+        "username": "rd-user",
+        "password": "YKwJQi9HPqmamMmdyW8U",
+        "url": "https://172.17.64.1:19200",
+        "index": "",
+        "indexStartDate": "2022-07-27",
+        "indexEndDate": "2022-07-29",
+        "k8sNamespace": "infra-external",
+        "searchKeyword": "queryDeviceDataDto"
+    }
+}

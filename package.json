@@ -1,0 +1,20 @@
+{
+  "name": "es-data-exporter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "es:local": "cross-env NODE_ENV=default node app.js",
+    "es:dev": "cross-env NODE_ENV=dev node app.js",
+    "es:production": "cross-env NODE_ENV=production node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "0.27.2",
+    "config": "3.3.7",
+    "csv-writer": "1.6.0",
+    "moment": "2.29.4"
+  }
+}
